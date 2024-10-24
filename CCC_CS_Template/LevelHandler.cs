@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace CCC_CS_Template;
 
 /// <summary>
@@ -134,7 +136,7 @@ public static partial class LevelHandler
             var formattedOutput = solution.Format(output);
 
             // ensure the output ends with a newline
-            if(!formattedOutput.EndsWith('\n')) formattedOutput += '\n';
+            if (!formattedOutput.EndsWith('\n')) formattedOutput += '\n';
             File.WriteAllText($"{dir}/level{level}_{inputFile.Id}.out", formattedOutput);
         }
     }
@@ -186,8 +188,8 @@ public static partial class LevelHandler
             Console.WriteLine(exampleOutput);
             Console.WriteLine("Got:");
             Console.WriteLine(formattedOutput);
-            
-            if (string.CompareOrdinal(formattedOutput.Trim(), exampleOutput.Trim()) == 0)
+
+            if (CleanStringEqual(exampleOutput, formattedOutput, out var diff))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Test passed");
@@ -195,6 +197,7 @@ public static partial class LevelHandler
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(diff);
                 Console.WriteLine("Test failed");
             }
         }
@@ -206,6 +209,32 @@ public static partial class LevelHandler
         }
 
         Console.ResetColor();
+    }
+
+    private static bool CleanStringEqual(string a, string b, out string diff)
+    {
+        string NormalizeNewlines(string input)
+        {
+            return input.Replace("\r\n", "\n").Replace("\r", "\n");
+        }
+
+        StringBuilder diffBuilder = new();
+        a = NormalizeNewlines(a).Trim();
+        b = NormalizeNewlines(b).Trim();
+
+        for (int i = 0; i < Math.Max(a.Length, b.Length); i++)
+        {
+            char expectedChar = i < a.Length ? a[i] : ' ';
+            char actualChar = i < b.Length ? b[i] : ' ';
+            if (actualChar != expectedChar)
+            {
+                diffBuilder.Append(
+                    $"({i}.idx)\tExpected: |Got:\n\t{expectedChar}\t  |{actualChar}\n{new string('-', 23)}\n");
+            }
+        }
+
+        diff = diffBuilder.ToString();
+        return diffBuilder.Length == 0;
     }
 }
 
