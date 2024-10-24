@@ -100,7 +100,7 @@ public static partial class LevelHandler
             if (file.Contains("example"))
             {
                 if (file.EndsWith(".in")) exampleInp = File.ReadAllLines(file);
-                else exampleOut = File.ReadAllText(file);
+                else exampleOut = File.ReadAllText(file).Trim();
                 continue;
             }
 
@@ -183,8 +183,8 @@ public static partial class LevelHandler
             Console.WriteLine(exampleOutput);
             Console.WriteLine("Got:");
             Console.WriteLine(formattedOutput);
-
-            if (exampleOutput == formattedOutput)
+            
+            if (string.CompareOrdinal(formattedOutput, exampleOutput) == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Test passed");
