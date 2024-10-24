@@ -132,7 +132,10 @@ public static partial class LevelHandler
         {
             var output = solution.Solve(inputFile.Lines);
             var formattedOutput = solution.Format(output);
-            File.WriteAllText($"{dir}/level{inputFile.Id}.out", formattedOutput);
+
+            // ensure the output ends with a newline
+            if(!formattedOutput.EndsWith('\n')) formattedOutput += '\n';
+            File.WriteAllText($"{dir}/level{level}_{inputFile.Id}.out", formattedOutput);
         }
     }
 
@@ -184,7 +187,7 @@ public static partial class LevelHandler
             Console.WriteLine("Got:");
             Console.WriteLine(formattedOutput);
             
-            if (string.CompareOrdinal(formattedOutput, exampleOutput) == 0)
+            if (string.CompareOrdinal(formattedOutput.Trim(), exampleOutput.Trim()) == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Test passed");
