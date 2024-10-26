@@ -1,90 +1,103 @@
-# CCC_CS_Template
+# CCC CS Template
 
-## About
+This repository provides a structured template for the "Cloudflight Coding Contest" coding contests using the C# programming language.
+It includes a `LevelHandler` class to manage input, output, and test your code. 
+Solutions for each level can be implemented by creating a class with the `ISolution` interface,
+allowing for flexible and customizable handling of contest problems.
 
-Template for the "Cloudflight coding contest" made for C# programming language.
+## Getting Started
 
-## Usage
+### Prerequisites
+- **C# 10.0 or later** installed
+- **File structure**: Set up directories for input and output files as expected by the `LevelHandler` (explained in detail below).
 
-1. Clone this repository
-2. (Optional) Delete `SolutionExamples.cs` file if you don't need them
-3. Edit the `Program.cs` file to implement the solution
-4. Run the program with `dotnet run` command or in an IDE
+### Structure
+- **`LevelHandler`**: Manages reading and writing of input/output files and provides methods for testing and solving individual levels.
+- **`ISolution`**: Defines the structure for implementing a solution. This interface requires two methods:
+    - `Solve(string[] input)`: Solves the problem for a given string array of input file lines.
+    - `Format(T output)`: Formats the output for writing to the output file.
 
-## Using the LevelHandler
+## Setup and Usage
 
-The LevelHandler class is responsible for reading, writing and processing of the input and output
-of the problem, as well as testing it. It is used by giving it the level number and the ISolution implementation.
-Before using it, it needs to be initialized with the input and output file paths.
+### 1. Creating the Input/Output Directory Structure
 
-The input should be in the following format:
+Input and output files should be organized by level, as `LevelHandler` reads from specific directories:
+- **Input files**: Place files in the `Input` directory, e.g., `Input/level1`.
+- **Output files**: Generated output files are saved in the `Output` directory, e.g., `Output/level1`.
 
-```plaintext
-Input_Top_Path_Folder
-|- levelx
-||- levelx_y.in
-||    ...
-||- levelx_example.in
-||- levelx_example.out
-```
+### 2. Implementing a Solution with `ISolution`
 
-Which is the default format of the CCC problems, when you unzip them and move them to a folder like the creatively named
-`Input_Top_Path_Folder`.
-
-The output will be in the following format:
-
-```plaintext
-Output_Top_Path_Folder
-|- levelx
-||- levelx_y.out
-||    ...
-```
-
-Note that the example files are not processed by the LevelHandler, they are only used for testing.
-
-Example of usage for solving:
+Create a new solution class implementing `ISolution`. For example, here’s a simple solution structure:
 
 ```csharp
-private static void Main()
+class SolutionExample : ISolution<List<int>>
 {
-    LevelHandler.Initialize("your input top path", "your output top path");
-    LevelHandler.SolveLevel(3, new SolutionExamples.Solution4());
-}    
-```
+    public List<int> Solve(string[] input)
+    {
+        // Implement your solution here
+    }
 
-Example of usage for testing:
-
-```csharp
-private static void Main()
-{
-    LevelHandler.Initialize("your path", "your path");
-    LevelHandler.TestLevel(3, new SolutionExamples.Solution4());
+    public string Format(List<int> output)
+    {
+        // Format output as a string for output file
+        return string.Join("\n", output);
+    }
 }
 ```
 
-## Using ISolution
+### 3. Initializing `LevelHandler`
 
-The LevelHandler uses the ISolution interface to solve and format the output of the problem.
-The ISolution has the following implementation in the `LevelHandler.cs` File:
-
-```csharp
-public interface ISolution<T>
-{
-    public T Solve(string[] input);
-    public string Format(T output);
-}
-```
-
-Examples are given in the `SolutionExamples.cs` file.
-They showcase different levels of type complexity, to showcase how formating can be used.
-Here is a simple example:
+Use the `LevelHandlerBuilder` class to configure your directories and enable test diff display, if desired.
 
 ```csharp
-public class Solution1 : ISolution<string>
-{
-    public string Solve(string[] input) => "Test";
-    public string Format(string output) => output;
-}
+var levelHandler = new LevelHandler.LevelHandlerBuilder()
+    .SetInputDir("/path/to/Input")
+    .SetOutputDir("/path/to/Output")
+    .ShowTestDiff() // Optional: shows differences if the test fails
+    .Build();
 ```
 
-This example is a simple solution that returns the string "Test" and formats it to the same string.
+### 4. Running a Solution
+
+To test or solve a level, use the `TestLevel` or `SolveLevel` methods of `LevelHandler`, passing the level number and solution instance.
+
+```csharp
+levelHandler.TestLevel(1, new SolutionExample());
+levelHandler.SolveLevel(1, new SolutionExample());
+```
+
+- **`TestLevel`**: Compares the solution’s output to the expected output, showing differences if enabled.
+- **`SolveLevel`**: Writes the solution's output directly to the output directory.
+
+## Example
+
+Here’s an example of a solution and how to test it:
+
+```csharp
+class SolutionExample1 : ISolution<List<int>>
+{
+    public List<int> Solve(string[] input)
+    {
+        var res = new List<int>();
+        foreach (var line in input)
+        {
+            var nums = line.Split(" ").Select(int.Parse).ToArray();
+            // Implement problem logic here
+        }
+        return res;
+    }
+
+    public string Format(List<int> output) => string.Join("\n", output);
+}
+
+// Initialize LevelHandler
+var levelHandler = new LevelHandler.LevelHandlerBuilder()
+    .SetInputDir("path/to/Input")
+    .SetOutputDir("path/to/Output")
+    .ShowTestDiff()
+    .Build();
+
+// Run tests
+levelHandler.TestLevel(1, new SolutionExample1());
+```
+---

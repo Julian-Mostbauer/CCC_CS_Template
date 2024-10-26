@@ -2,7 +2,7 @@
 
 internal static class Program
 {
-    class Solution1 : ISolution<List<int>>
+    class SolutionExample1 : ISolution<List<int>>
     {
         public List<int> Solve(string[] input)
         {
@@ -37,6 +37,6 @@ internal static class Program
             .ShowTestDiff()
             .Build();
 
-        levelHandler.TestLevel(1, new Solution1());
+        levelHandler.TestLevel(1, new SolutionExample1());
     }
 }
