@@ -4,19 +4,18 @@ This repository provides a structured template for the "Cloudflight Coding Conte
 It includes a `LevelHandler` class to manage input, output, and test your code. 
 Solutions for each level can be implemented by creating a class with the `ISolution` interface,
 allowing for flexible and customizable handling of contest problems.
-
+---
 ## Getting Started
 
 ### Prerequisites
-- **C# 10.0 or later** installed
 - **File structure**: Set up directories for input and output files as expected by the `LevelHandler` (explained in detail below).
-
+ 
 ### Structure
 - **`LevelHandler`**: Manages reading and writing of input/output files and provides methods for testing and solving individual levels.
 - **`ISolution`**: Defines the structure for implementing a solution. This interface requires two methods:
     - `Solve(string[] input)`: Solves the problem for a given string array of input file lines.
     - `Format(T output)`: Formats the output for writing to the output file.
-
+---
 ## Setup and Usage
 
 ### 1. Creating the Input/Output Directory Structure
@@ -68,7 +67,7 @@ levelHandler.SolveLevel(1, new SolutionExample());
 
 - **`TestLevel`**: Compares the solution’s output to the expected output, showing differences if enabled.
 - **`SolveLevel`**: Writes the solution's output directly to the output directory.
-
+---
 ## Example
 
 Here’s an example of a solution and how to test it:
